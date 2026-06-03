@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Urban View · Gestión de Rentas</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+:root{--bg:#fff;--bg2:#f7f7f5;--bg3:#f0ede8;--text:#1a1a1a;--text2:#666;--text3:#999;--border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);--green:#1D9E75;--green-light:#E1F5EE;--green-dark:#0F6E56;--blue:#185FA5;--blue-light:#E6F1FB;--purple:#534AB7;--purple-light:#EEEDFE;--amber:#854F0B;--amber-light:#FAEEDA;--red:#993C1D;--red-light:#FAECE7;--radius:8px;--radius-lg:12px}
+body{background:var(--bg3);color:var(--text);min-height:100vh}
+.app{max-width:900px;margin:0 auto;background:var(--bg);min-height:100vh;box-shadow:0 0 0 0.5px var(--border)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:0.5px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:50;gap:8px;flex-wrap:wrap}
+.logo{font-size:15px;font-weight:600;letter-spacing:-.4px;white-space:nowrap}
+.logo span{color:var(--green)}
+.nav{display:flex;gap:3px;flex-wrap:wrap}
+.nb{font-size:12px;padding:6px 10px;border-radius:var(--radius);border:0.5px solid transparent;background:transparent;cursor:pointer;color:var(--text2);transition:all .15s;white-space:nowrap}
+.nb.active{background:var(--bg2);border-color:var(--border);color:var(--text);font-weight:500}
+.nb:hover:not(.active){background:var(--bg2)}
+.content{padding:18px}
+.stitle{font-size:17px;font-weight:600;margin-bottom:14px}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:16px}
+.met{background:var(--bg2);border-radius:var(--radius);padding:11px 13px}
+.met-l{font-size:11px;color:var(--text2);margin-bottom:3px}
+.met-v{font-size:19px;font-weight:600}
+.met-s{font-size:10px;color:var(--text3);margin-top:2px}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:13px 15px;margin-bottom:10px}
+.ch{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px}
+.cn{font-size:13px;font-weight:600}
+.ct{font-size:14px;font-weight:600;text-align:right;flex-shrink:0}
+.usd{color:var(--green-dark)}.ars{color:var(--blue)}.neg{color:#E24B4A}
+.tag{font-size:10px;padding:2px 7px;border-radius:var(--radius);font-weight:500;display:inline-block}
+.tg{background:var(--green-light);color:#3B6D11}
+.tp{background:var(--amber-light);color:var(--amber)}
+.te{background:var(--blue-light);color:var(--blue)}
+.tk{background:var(--purple-light);color:var(--purple)}
+.tc{background:var(--red-light);color:var(--red)}
+.ta{background:#E1F5EE;color:#085041}
+.pr{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-top:0.5px solid var(--border);font-size:12px;gap:4px}
+.pn{color:var(--text2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pm{font-weight:500;min-width:72px;text-align:right;white-space:nowrap}
+.chips{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.chip{font-size:10px;padding:2px 8px;border-radius:var(--radius);background:var(--bg2);color:var(--text2);border:0.5px solid var(--border)}
+.mb{font-size:11px;padding:5px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:transparent;cursor:pointer;color:var(--text2);transition:all .15s}
+.mb:hover{background:var(--bg2)}
+.mb.paid{background:var(--green-light);border-color:#9FE1CB;color:#3B6D11}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:7px 9px;font-size:10px;font-weight:600;color:var(--text2);border-bottom:0.5px solid var(--border);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+td{padding:7px 9px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg2)}
+input,select,textarea{font-family:inherit;font-size:13px;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);padding:7px 10px;color:var(--text);width:100%;outline:none;transition:border .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fl{font-size:11px;color:var(--text2);font-weight:500}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.fr3{grid-template-columns:1fr 1fr 1fr}
+.fr1{grid-template-columns:1fr}
+.btn-primary{background:var(--green);color:#fff;border:none;border-radius:var(--radius);padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-primary:hover{background:var(--green-dark)}
+.btn-danger{background:var(--red-light);color:var(--red);border:0.5px solid #F5C4B3;border-radius:var(--radius);padding:5px 10px;font-size:11px;cursor:pointer}
+.btn-danger:hover{background:#F5C4B3}
+.notice{font-size:11px;padding:7px 11px;border-radius:var(--radius);background:var(--green-light);color:var(--green-dark);border:0.5px solid #9FE1CB;margin-bottom:13px}
+.tbox{flex:1;min-width:110px;background:var(--bg2);border-radius:var(--radius);padding:10px 12px}
+.tbl{font-size:10px;color:var(--text2);margin-bottom:3px;font-weight:500}
+.tbv{font-size:15px;font-weight:600}
+.rc{background:var(--bg2);border-radius:var(--radius);padding:10px 13px;border-left:3px solid var(--green)}
+.rl{font-size:10px;font-weight:600;color:var(--text2);margin-bottom:3px;text-transform:uppercase;letter-spacing:.4px}
+.rv{font-size:17px;font-weight:600}
+.ab{font-size:12px;padding:6px 12px;border-radius:var(--radius);border:0.5px solid #9FE1CB;background:var(--green-light);color:var(--green-dark);cursor:pointer;font-weight:600}
+.ab:hover{background:#9FE1CB}
+.sr{display:flex;gap:6px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.ox{overflow-x:auto}
+.mo-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:flex-start;justify-content:center;padding-top:40px;z-index:200;overflow-y:auto}
+.mo{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;width:90%;max-width:520px;margin-bottom:40px}
+.mt{font-size:15px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.xb{background:none;border:none;cursor:pointer;color:var(--text2);font-size:20px;line-height:1}
+.updated-badge{font-size:10px;padding:2px 8px;border-radius:var(--radius);background:var(--green-light);color:var(--green-dark);margin-left:8px;font-weight:500}
+@media(max-width:600px){.nav .nb span{display:none}.fr3{grid-template-columns:1fr 1fr}.fr{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<div class="topbar">
+  <div class="logo">Urban<span>View</span> · Rentas <span class="updated-badge" id="update-badge"></span></div>
+  <nav class="nav">
+    <button class="nb active" onclick="go('dashboard')"><i class="ti ti-layout-dashboard"></i> <span>Dashboard</span></button>
+    <button class="nb" onclick="go('pagos')"><i class="ti ti-users"></i> <span>Por titular</span></button>
+    <button class="nb" onclick="go('marcar')"><i class="ti ti-checkbox"></i> <span>Marcar pagos</span></button>
+    <button class="nb" onclick="go('carga')"><i class="ti ti-clipboard-text"></i> <span>Carga mensual</span></button>
+    <button class="nb" onclick="go('base')"><i class="ti ti-database"></i> <span>Base de datos</span></button>
+  </nav>
+</div>
+<div class="content" id="ct"></div>
+</div>
+
+<script>
+const MES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const HOY=new Date();
+let S={sc:'dashboard',m:HOY.getMonth(),y:HOY.getFullYear(),modal:false,ei:null};
+
+const DB_KEY='uv_db',PAG_KEY='uv_pag',CAR_KEY='uv_car';
+
+// ─── BASE DE DATOS (actualizar pegando nuevos datos desde Claude) ───
+const DB_FRESH=[
+  {uf:'1',titular:'NICOLE MARCUS',telefono:'',monto_uf:0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'alejandro',paga_renta:false,pct_uv:15,pct_alejandro:100,pct_conrado:0,cbu_alias:'',iva_renta_usd:false},
+  {uf:'14',titular:'NICOLE MARCUS',telefono:'',monto_uf:0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'alejandro',paga_renta:false,pct_uv:15,pct_alejandro:100,pct_conrado:0,cbu_alias:'',iva_renta_usd:false},
+  {uf:'17',titular:'NICOLE MARCUS',telefono:'',monto_uf:0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'alejandro',paga_renta:false,pct_uv:15,pct_alejandro:100,pct_conrado:0,cbu_alias:'',iva_renta_usd:false},
+  {uf:'18',titular:'NICOLE MARCUS',telefono:'',monto_uf:0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'alejandro',paga_renta:false,pct_uv:15,pct_alejandro:100,pct_conrado:0,cbu_alias:'',iva_renta_usd:false},
+  {uf:'2',titular:'MARCELO LIFSCHITZ',telefono:'11-3561-5151',monto_uf:850.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'3',titular:'SEBASTIAN BECCACECE - LEONARDO FERNEZ',telefono:'11-3652-0029',monto_uf:900.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'4',titular:'SEBASTIAN BECCACECE - LEONARDO FERNEZ',telefono:'11-3652-0029',monto_uf:900.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'5',titular:'FRANCO GIORGIUTTI. ( +55)',telefono:'11960364767',monto_uf:850.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'6',titular:'SEBASTIAN BECCACECE - LEONARDO FERNEZ',telefono:'11-3652-0029',monto_uf:900.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'7',titular:'SEBASTIAN BECCACECE - LEONARDO FERNEZ',telefono:'11-3652-0029',monto_uf:900.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'8',titular:'ROXANA LUZ COCCHIA',telefono:'11-5486-0880',monto_uf:850.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'9',titular:'ROXANA LUZ COCCHIA',telefono:'11-5486-0880',monto_uf:850.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'10',titular:'CLAUDIO SCHEJTER',telefono:'92617513426',monto_uf:1000.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'externo',paga_renta:true,pct_uv:15,pct_alejandro:100,pct_conrado:0,cbu_alias:'',iva_renta_usd:false},
+  {uf:'11',titular:'ROBERTO HASBANI / SUSANA LORENZO',telefono:'11-5143-9195',monto_uf:1000.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'ROBERTO HASBANI / SUSANA LORENZO',monto_cochera:100.0,moneda_cochera:'USD',inicio_pago_cochera:'2026-06-01',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'externo',paga_renta:true,pct_uv:15,pct_alejandro:100,pct_conrado:0,cbu_alias:'',iva_renta_usd:false},
+  {uf:'12',titular:'FEDERICO GUERCIO',telefono:'11-5482-8262',monto_uf:100.0,moneda:'USD',inicio_pago:'',tiene_cochera:true,titular_cochera:'FEDERICO GUERCIO',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'2026-06-01',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'13',titular:'FEDERICO GUERCIO',telefono:'11-5482-8262',monto_uf:850.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'15',titular:'RAMIRO DIAZ',telefono:'11-6521-3891',monto_uf:850.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'RAMIRO DIAZ',monto_cochera:100.0,moneda_cochera:'USD',inicio_pago_cochera:'2026-06-01',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'16',titular:'RAMIRO DIAZ',telefono:'11-6521-3891',monto_uf:850.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'compartido',paga_renta:true,pct_uv:15,pct_alejandro:40,pct_conrado:60,cbu_alias:'',iva_renta_usd:false},
+  {uf:'19',titular:'JAVIER KALFAIAN',telefono:'',monto_uf:1000.0,moneda:'USD',inicio_pago:'',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'conrado',paga_renta:true,pct_uv:15,pct_alejandro:0,pct_conrado:100,cbu_alias:'',iva_renta_usd:false},
+  {uf:'20',titular:'JUAN CARLOS BLASI',telefono:'11-3304-8554',monto_uf:1200.0,moneda:'USD',inicio_pago:'2026-06-01',tiene_cochera:true,titular_cochera:'Blasi, Juan Carlos',monto_cochera:300.0,moneda_cochera:'USD',inicio_pago_cochera:'2026-06-01',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'conrado',paga_renta:true,pct_uv:15,pct_alejandro:0,pct_conrado:100,cbu_alias:'',iva_renta_usd:false},
+  {uf:'22',titular:'LUCIANO GABRIEL',telefono:'11-2337-7971',monto_uf:1200.0,moneda:'USD',inicio_pago:'2026-06-01',tiene_cochera:true,titular_cochera:'Catapano, Luciano',monto_cochera:300.0,moneda_cochera:'USD',inicio_pago_cochera:'2026-06-01',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'conrado',paga_renta:true,pct_uv:15,pct_alejandro:0,pct_conrado:100,cbu_alias:'',iva_renta_usd:false},
+  {uf:'23',titular:'LUCIANO GABRIEL',telefono:'11-2337-7971',monto_uf:1200.0,moneda:'USD',inicio_pago:'2026-06-01',tiene_cochera:true,titular_cochera:'Catapano, Luciano',monto_cochera:300.0,moneda_cochera:'USD',inicio_pago_cochera:'2026-06-01',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'conrado',paga_renta:true,pct_uv:15,pct_alejandro:0,pct_conrado:100,cbu_alias:'',iva_renta_usd:false},
+  {uf:'24',titular:'DOMINGO CATAPANO',telefono:'11-2337-7971',monto_uf:1200.0,moneda:'USD',inicio_pago:'2026-06-01',tiene_cochera:true,titular_cochera:'Catapano, Luciano',monto_cochera:300.0,moneda_cochera:'USD',inicio_pago_cochera:'2026-06-01',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'conrado',paga_renta:true,pct_uv:15,pct_alejandro:0,pct_conrado:100,cbu_alias:'',iva_renta_usd:false},
+  {uf:'26',titular:'ALEJANDRA GOMEZ',telefono:'11-4410-7079',monto_uf:1200.0,moneda:'USD',inicio_pago:'2026-06-01',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'conrado',paga_renta:true,pct_uv:15,pct_alejandro:0,pct_conrado:100,cbu_alias:'',iva_renta_usd:false},
+  {uf:'27',titular:'ALEJANDRA GOMEZ',telefono:'11-4410-7079',monto_uf:1200.0,moneda:'USD',inicio_pago:'2026-06-01',tiene_cochera:false,titular_cochera:'',monto_cochera:0.0,moneda_cochera:'USD',inicio_pago_cochera:'',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'conrado',paga_renta:true,pct_uv:15,pct_alejandro:0,pct_conrado:100,cbu_alias:'',iva_renta_usd:false},
+  {uf:'35',titular:'MARIANELA HASBANI',telefono:'11-4410-7079',monto_uf:1000.0,moneda:'USD',inicio_pago:'2026-06-01',tiene_cochera:true,titular_cochera:'Hasbani, Marianela',monto_cochera:100.0,moneda_cochera:'USD',inicio_pago_cochera:'2026-06-01',forma_pago_renta:'transferencia_monotributo_autonomo',tipo_propiedad:'conrado',paga_renta:true,pct_uv:15,pct_alejandro:0,pct_conrado:100,cbu_alias:'',iva_renta_usd:false}
+];
+// ────────────────────────────────────────────────────────────────────
+
+const DB_VERSION='2026-06-01a';
+
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzGWVj6FRN6QSKONcmKxiIvHYWEXRrDQ8VmWgCcxqt9SGC6g719ww8emhDviB91z6l9Xw/exec';
+
+// Solo resetear la DB si cambió la versión
+try{
+  const savedVersion=localStorage.getItem('uv_version');
+  if(savedVersion!==DB_VERSION){
+    localStorage.removeItem('uv_db');
+    ['uv_db2','uv_db3','uv_pag2','uv_pag3','uv_car2','uv_car3'].forEach(k=>localStorage.removeItem(k));
+    localStorage.setItem('uv_version',DB_VERSION);
+  }
+}catch(e){}
+let db = DB_FRESH.map(u=>Object.assign({},u));
+document.getElementById('update-badge').textContent='v '+DB_VERSION;
+
+let pag=JSON.parse(localStorage.getItem('uv_pagos')||'{}');
+let car=JSON.parse(localStorage.getItem('uv_carga')||'{}');
+
+// Sync from Sheets on load
+async function syncFromSheets(){
+  try{
+    const [rPag, rCar] = await Promise.all([
+      fetch(SCRIPT_URL+'?hoja=Pagos&accion=getAll').then(r=>r.json()).catch(()=>({})),
+      fetch(SCRIPT_URL+'?hoja=CargaMensual&accion=getAll').then(r=>r.json()).catch(()=>({}))
+    ]);
+    if(Object.keys(rPag).length>0){pag=rPag;localStorage.setItem('uv_pagos',JSON.stringify(pag));}
+    if(Object.keys(rCar).length>0){
+      // Parse JSON values back
+      let carParsed={};
+      Object.keys(rCar).forEach(k=>{
+        try{carParsed[k]=JSON.parse(rCar[k]);}catch(e){carParsed[k]=rCar[k];}
+      });
+      car=carParsed;
+      localStorage.setItem('uv_carga',JSON.stringify(car));
+    }
+    render();
+  }catch(e){console.log('Sheets sync error:',e);}
+}
+
+async function saveToSheets(hoja, clave, valor){
+  try{
+    await fetch(SCRIPT_URL, {
+      method:'POST',
+      body: JSON.stringify({hoja, accion:'set', clave, valor}),
+      headers:{'Content-Type':'text/plain'}
+    });
+  }catch(e){console.log('Sheets save error:',e);}
+}
+
+function save(sheetKey, sheetHoja){
+  try{
+    localStorage.setItem('uv_db',JSON.stringify(db));
+    localStorage.setItem('uv_pagos',JSON.stringify(pag));
+    localStorage.setItem('uv_carga',JSON.stringify(car));
+    if(sheetKey&&sheetHoja) saveToSheets(sheetHoja, sheetKey, sheetKey.startsWith('car')?JSON.stringify(car[sheetKey.replace('car__','')]):JSON.stringify(pag[sheetKey]));
+  }catch(e){}
+}
+
+function mk(m,y){return `${y}-${String(m+1).padStart(2,'0')}`}
+
+function activo(u,m,y){
+  if(!u.paga_renta||!u.monto_uf) return false;
+  if(!u.inicio_pago||u.inicio_pago==='') return false;
+  // Paga desde el mismo mes del inicio_pago
+  const mesActual=y+'-'+String(m+1).padStart(2,'0');
+  const mesInicio=u.inicio_pago.substring(0,7);
+  return mesActual>=mesInicio;
+}
+
+function coch(u,m,y){
+  if(!u.tiene_cochera||!u.monto_cochera) return false;
+  if(!u.inicio_pago_cochera||u.inicio_pago_cochera==='') return false;
+  const mesActual=y+'-'+String(m+1).padStart(2,'0');
+  const mesInicio=u.inicio_pago_cochera.substring(0,7);
+  return mesActual>=mesInicio;
+}
+function coch_OLD(u,m,y){
+  if(!u.tiene_cochera||!u.monto_cochera) return false;
+  if(!u.inicio_pago_cochera) return false;
+  const ini=new Date(u.inicio_pago_cochera);
+  return new Date(y,m,1)>=new Date(ini.getFullYear(),ini.getMonth(),1);
+}
+
+function calcUF(u,m,y){
+  if(!activo(u,m,y)) return {items:[],totalUSD:0,totalARS:0};
+  let items=[];
+  let iva=u.iva_renta_usd&&u.moneda==='USD'?u.monto_uf*0.21:0;
+  items.push({desc:`UF ${u.uf}`,monto:u.monto_uf+iva,moneda:u.moneda,iva:iva>0});
+  if(coch(u,m,y)) items.push({desc:`Cochera UF ${u.uf}`,monto:u.monto_cochera,moneda:u.moneda_cochera,iva:false});
+  return {
+    items,
+    totalUSD:items.filter(i=>i.moneda==='USD').reduce((s,i)=>s+i.monto,0),
+    totalARS:items.filter(i=>i.moneda==='ARS').reduce((s,i)=>s+i.monto,0)
+  };
+}
+
+function grupos(m,y){
+  let g={};
+  db.forEach(u=>{
+    if(!activo(u,m,y)) return;
+    let t=u.titular;
+    if(!g[t]) g[t]={titular:t,tel:u.telefono,forma:u.forma_pago_renta,cbu:u.cbu_alias,tipo:u.tipo_propiedad,ufs:[],tUSD:0,tARS:0,pUV:u.pct_uv,pAl:u.pct_alejandro,pCo:u.pct_conrado};
+    let r=calcUF(u,m,y);
+    g[t].ufs.push({u,items:r.items,tUSD:r.totalUSD,tARS:r.totalARS});
+    g[t].tUSD+=r.totalUSD;
+    g[t].tARS+=r.totalARS;
+  });
+  return Object.values(g);
+}
+
+function pkey(t,m,y){return `${mk(m,y)}__${t}`}
+function pst(t,m,y){return pag[pkey(t,m,y)]||'pendiente'}
+function pset(t,m,y,v){
+  const k=pkey(t,m,y);
+  pag[k]=v;
+  localStorage.setItem('uv_pagos',JSON.stringify(pag));
+  saveToSheets('Pagos',k,v);
+  render();
+}
+function fmt(n,mon){n=Math.round(n);return mon==='USD'?'U$D '+n.toLocaleString('es-AR'):'$'+n.toLocaleString('es-AR');}
+function tipTag(t){
+  const m={compartido:'tk',externo:'te',conrado:'tc',alejandro:'ta'};
+  const l={compartido:'Compartido',externo:'Externo',conrado:'Conrado',alejandro:'Alejandro'};
+  return `<span class="tag ${m[t]||'tg'}">${l[t]||t}</span>`;
+}
+function stTag(s){return s==='pagado'?'<span class="tag tg">🟢 Pagado</span>':'<span class="tag tp">🟡 Pendiente</span>';}
+function selMes(){
+  return `<select onchange="S.m=parseInt(this.value);render()">${MES.map((m,i)=>`<option value="${i}"${i===S.m?' selected':''}>${m}</option>`).join('')}</select>
+  <select onchange="S.y=parseInt(this.value);render()" style="width:80px">${[2025,2026,2027].map(y=>`<option value="${y}"${y===S.y?' selected':''}>${y}</option>`).join('')}</select>`;
+}
+
+function rDashboard(){
+  const gs=grupos(S.m,S.y);
+  let tUSD=0,pag0=0,pend=0,ufc=0,pagUSD=0,pendUSD=0;
+  gs.forEach(g=>{
+    tUSD+=g.tUSD;
+    if(pst(g.titular,S.m,S.y)==='pagado'){pag0++;pagUSD+=g.tUSD;}
+    else{pend++;pendUSD+=g.tUSD;}
+    g.ufs.forEach(()=>ufc++);
+  });
+  const ck=mk(S.m,S.y),cd=car[ck]||{ufs:{}};
+  // Calculate totals from per-UF data
+  let ing=0,gas=0,totalUV=0,totalAl=0,totalCo=0;
+  gs.forEach(g=>g.ufs.forEach(({u})=>{
+    const d=(cd.ufs||{})[u.uf]||{};
+    const i2=parseFloat(d.ingreso||0)+parseFloat(d.ingreso_cochera||0);
+    const g2=parseFloat(d.gastos||0);
+    const alq=(u.tipo_propiedad==='externo'||u.tipo_propiedad==='conrado')?u.monto_uf:0;
+    const neto=i2-alq-g2,uv=neto>0?neto*u.pct_uv/100:0,n2=neto-uv;
+    ing+=i2;gas+=g2;
+    if(i2>0){totalUV+=uv;totalAl+=n2*u.pct_alejandro/100;totalCo+=n2*u.pct_conrado/100;}
+  }));
+  const res=ing-gas;
+  const act=db.filter(u=>activo(u,S.m,S.y));
+  const pUV=act.length?act[0].pct_uv:15,pAl=act.length?act[0].pct_alejandro:40,pCo=act.length?act[0].pct_conrado:60;
+  return `
+  <div class="sr"><div class="stitle" style="margin:0">Dashboard — ${MES[S.m]} ${S.y}</div>${selMes()}</div>
+  <div class="notice"><i class="ti ti-calendar-check"></i> Las rentas se pagan del 1 al 10 de cada mes.</div>
+  ${(()=>{const d=new Date();if(d.getMonth()===S.m&&d.getFullYear()===S.y&&d.getDate()>=1&&d.getDate()<=10){const pend=gs.filter(g=>pst(g.titular,S.m,S.y)==='pendiente').length;if(pend>0)return`<div style="background:#FAEEDA;border:0.5px solid #FAC775;border-radius:var(--radius);padding:10px 14px;margin-bottom:13px;display:flex;align-items:center;gap:10px"><i class="ti ti-bell-ringing" style="font-size:20px;color:#854F0B"></i><div><div style="font-weight:600;color:#633806;font-size:13px">Período de cobro activo — del 1 al 10</div><div style="font-size:12px;color:#854F0B;margin-top:2px">Tenés <strong>${pend} pago${pend>1?'s':''} pendiente${pend>1?'s':''}</strong> este mes.</div></div></div>`;}return'';})()}
+  ${(()=>{
+    const hoy=new Date();
+    const dia=hoy.getDate();
+    const esMesActual=hoy.getMonth()===S.m&&hoy.getFullYear()===S.y;
+    if(esMesActual&&dia>=1&&dia<=10){
+      const diasRest=10-dia;
+      const color=diasRest<=2?'#E24B4A':diasRest<=5?'#BA7517':'#1D9E75';
+      return `<div style="background:#FAEEDA;border:0.5px solid #FAC775;border-radius:var(--radius);padding:10px 14px;margin-bottom:13px;display:flex;align-items:center;gap:10px">
+        <div style="font-size:24px">${diasRest<=2?'🔴':'🟡'}</div>
+        <div><div style="font-weight:600;color:#633806;font-size:13px">Período de cobro activo</div>
+        <div style="font-size:12px;color:#854F0B;margin-top:2px">Hoy día ${dia} · <strong style="color:${color}">${diasRest===0?'¡Último día!':diasRest===1?'Queda 1 día':'Quedan '+diasRest+' días'}</strong> para el vencimiento del 10</div></div>
+      </div>`;
+    }
+    return '';
+  })()}
+  <div class="metrics">
+    <div class="met"><div class="met-l">Total renta a pagar</div><div class="met-v usd">${fmt(tUSD,'USD')}</div><div class="met-s">${ufc} UFs · ${gs.length} titulares</div></div>
+    <div class="met"><div class="met-l">🟢 Pagados</div><div class="met-v" style="color:var(--green)">${pag0}</div><div class="met-s">de ${gs.length} titulares · ${fmt(pagUSD,'USD')}</div></div>
+    <div class="met"><div class="met-l">🟡 Pendientes</div><div class="met-v" style="color:#BA7517">${pend}</div><div class="met-s">${pend>0?fmt(pendUSD,'USD'):''}</div></div>
+    <div class="met"><div class="met-l">Ingresos reales</div><div class="met-v usd">${fmt(ing,'USD')}</div></div>
+    <div class="met"><div class="met-l">Gastos</div><div class="met-v neg">${fmt(gas,'USD')}</div></div>
+    <div class="met"><div class="met-l">Resultado neto</div><div class="met-v ${res>=0?'usd':'neg'}">${fmt(res,'USD')}</div></div>
+  </div>
+  <div style="font-size:13px;font-weight:600;margin-bottom:9px">Resultado por participante</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+    <div class="rc"><div class="rl">Ganancia Urban View</div><div class="rv ${totalUV>=0?'usd':'neg'}">${fmt(totalUV,'USD')}</div></div>
+    <div class="rc" style="border-left-color:var(--blue)"><div class="rl">Resultado Alejandro</div><div class="rv ${totalAl>=0?'usd':'neg'}">${fmt(totalAl,'USD')}</div></div>
+    <div class="rc" style="border-left-color:var(--purple)"><div class="rl">Resultado Conrado</div><div class="rv ${totalCo>=0?'usd':'neg'}">${fmt(totalCo,'USD')}</div></div>
+  </div>`;
+}
+
+function rPagos(){
+  const gs=grupos(S.m,S.y);
+  let h=`<div class="sr"><div class="stitle" style="margin:0">Por titular — ${MES[S.m]} ${S.y}</div>${selMes()}</div>`;
+  if(!gs.length) return h+'<p style="text-align:center;padding:30px;color:var(--text2)">No hay pagos activos para este mes.</p>';
+  gs.forEach(g=>{
+    const st=pst(g.titular,S.m,S.y);
+    let rows=g.ufs.map(x=>x.items.map(it=>`<div class="pr"><span class="pn">${it.desc}${it.iva?' <small style="color:#BA7517">(+IVA 21%)</small>':''}</span><span class="pm ${it.moneda==='USD'?'usd':'ars'}">${fmt(it.monto,it.moneda)}</span></div>`).join('')).join('');
+    let tot=g.tUSD>0?`<span class="usd">${fmt(g.tUSD,'USD')}</span>`:'';
+    if(g.tARS>0) tot+=(tot?' + ':'')+'<span class="ars">'+fmt(g.tARS,'ARS')+'</span>';
+    h+=`<div class="card"><div class="ch"><div style="flex:1;min-width:0"><div class="cn">${g.titular}</div>${g.tel?`<div style="font-size:11px;color:var(--text2);margin-top:2px"><i class="ti ti-phone"></i> ${g.tel}</div>`:''}</div><div style="text-align:right;flex-shrink:0"><div class="ct">${tot}</div><div style="margin-top:4px">${stTag(st)}</div></div></div>${rows}<div class="chips"><span class="chip">${tipTag(g.tipo)}</span><span class="chip"><i class="ti ti-credit-card"></i> ${(g.forma==='efectivo_retira'?'Efectivo (retira)':g.forma==='transferencia_monotributo_autonomo'?'Transf. monotributo':g.forma==='transferencia_responsable_inscripto'?'Transf. resp. inscripto':g.forma==='no_aplica'?'No aplica':g.forma||'—')}</span>${g.cbu?`<span class="chip"><i class="ti ti-copy"></i> ${g.cbu}</span>`:''}<span class="chip"><i class="ti ti-calendar"></i> Del 1 al 10</span><span class="chip">UV${g.pUV}% · Al${g.pAl}% · Co${g.pCo}%</span></div></div>`;
+  });
+  return h;
+}
+
+function rMarcar(){
+  const gs=grupos(S.m,S.y);
+  let h=`<div class="sr"><div class="stitle" style="margin:0">Marcar pagos — ${MES[S.m]} ${S.y}</div>${selMes()}</div><div class="ox"><table><thead><tr><th>Titular</th><th>Participación</th><th>UFs</th><th>Total</th><th>Estado</th><th></th></tr></thead><tbody>`;
+  gs.forEach(g=>{
+    const st=pst(g.titular,S.m,S.y);
+    h+=`<tr><td><strong>${g.titular}</strong>${g.tel?`<br><small style="color:var(--text2)">${g.tel}</small>`:''}</td><td>${tipTag(g.tipo)}</td><td style="font-size:11px;color:var(--text2)">${g.ufs.map(x=>`UF ${x.u.uf}`).join(', ')}</td><td class="usd" style="font-weight:600">${fmt(g.tUSD,'USD')}</td><td>${stTag(st)}</td><td><button class="mb ${st==='pagado'?'paid':''}" onclick="pset('${g.titular.replace(/'/g,"\\'")}',${S.m},${S.y},'${st==='pagado'?'pendiente':'pagado'}')">${st==='pagado'?'<i class="ti ti-rotate-clockwise"></i> Desmarcar':'<i class="ti ti-check"></i> Pagado'}</button></td></tr>`;
+  });
+  return h+'</tbody></table></div>';
+}
+
+function rCarga(){
+  const gs=grupos(S.m,S.y);
+  const ck=mk(S.m,S.y);
+  const cd=car[ck]||{ufs:{},gastos_gen:0,notas:''};
+  if(!cd.ufs) cd.ufs={};
+
+  let totalUV=0,totalAl=0,totalCo=0,totalNeto=0;
+
+  // Per-UF rows
+  let ufRows='';
+  gs.forEach(g=>{
+    g.ufs.forEach(({u})=>{
+      const uid=u.uf;
+      const cd_uf=cd.ufs[uid]||{ingreso:'',gastos:''};
+      const ing=parseFloat(cd_uf.ingreso||0);
+      const gas=parseFloat(cd_uf.gastos||0);
+      const alq=(u.tipo_propiedad==='externo'||u.tipo_propiedad==='conrado')?u.monto_uf:0;
+      // totals now calculated per UF below with cochera included
+      // Check if cochera is active this month
+      const cochActiva=u.tiene_cochera&&u.monto_cochera&&u.inicio_pago_cochera&&(mk(S.m,S.y)>=u.inicio_pago_cochera.substring(0,7));
+      const ingCoch=parseFloat(cd_uf.ingreso_cochera||0);
+      const ingTotal=ing+ingCoch;
+      const netoTotal=ingTotal-alq-gas;
+      const uvTotal=netoTotal>0?netoTotal*u.pct_uv/100:0;
+      const neto2Total=netoTotal-uvTotal;
+      const alTotal=neto2Total>0?neto2Total*u.pct_alejandro/100:0;
+      const coTotal=neto2Total>0?neto2Total*u.pct_conrado/100:0;
+      if(ingTotal>0){totalUV+=uvTotal;totalAl+=alTotal;totalCo+=coTotal;totalNeto+=netoTotal;}
+
+      ufRows+=`<div class="card" style="margin-bottom:8px">
+        <div class="ch" style="margin-bottom:6px">
+          <div><div class="cn">UF ${u.uf} — ${u.titular}</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:1px">${tipTag(u.tipo_propiedad)} ${alq>0?`<span style="font-size:10px;margin-left:4px">Alquiler dueño: <strong>U$D ${alq.toLocaleString('es-AR')}</strong></span>`:''}</div>
+          </div>
+          <div style="text-align:right;font-size:11px;color:var(--text2)">
+            ${ingTotal>0?`<div>UV <strong class="usd">U$D ${Math.round(uvTotal).toLocaleString('es-AR')}</strong></div>
+            ${alTotal>0?`<div>Al <strong style="color:var(--blue)">U$D ${Math.round(alTotal).toLocaleString('es-AR')}</strong></div>`:''}
+            ${coTotal>0?`<div>Co <strong style="color:var(--purple)">U$D ${Math.round(coTotal).toLocaleString('es-AR')}</strong></div>`:''}`:
+            '<span style="color:var(--text3)">Sin datos</span>'}
+          </div>
+        </div>
+        <div class="fr">
+          <div class="fg"><div class="fl">Ingreso depto (U$D)</div>
+            <input type="number" placeholder="0" value="${cd_uf.ingreso||''}" 
+              oninput="setCargaUF('${uid}','ingreso',this.value)" style="font-size:12px">
+          </div>
+          <div class="fg"><div class="fl">Gastos operativos (U$D)</div>
+            <input type="number" placeholder="0" value="${cd_uf.gastos||''}" 
+              oninput="setCargaUF('${uid}','gastos',this.value)" style="font-size:12px">
+          </div>
+        </div>
+        ${cochActiva?`<div class="fr" style="margin-top:4px">
+          <div class="fg"><div class="fl" style="color:#0F6E56"><i class="ti ti-car-garage"></i> Ingreso cochera (U$D)</div>
+            <input type="number" placeholder="0" value="${cd_uf.ingreso_cochera||''}" 
+              oninput="setCargaUF('${uid}','ingreso_cochera',this.value)" style="font-size:12px;border-color:#9FE1CB">
+          </div>
+          <div class="fg"><div class="fl" style="color:#0F6E56">Alquiler cochera dueño</div>
+            <div style="font-size:12px;padding:5px 8px;background:var(--bg2);border-radius:var(--radius);color:var(--text2)">U$D ${u.monto_cochera.toLocaleString('es-AR')} (fijo)</div>
+          </div>
+        </div>`:''}
+        ${ingTotal>0?`<div style="font-size:11px;color:var(--text2);margin-top:4px;display:flex;gap:12px;flex-wrap:wrap">
+          <span>Ingreso total: <strong>U$D ${ingTotal.toLocaleString('es-AR')}</strong></span>
+          ${alq>0?`<span>− Alquiler: <strong>U$D ${alq.toLocaleString('es-AR')}</strong></span>`:''}
+          <span>− Gastos: <strong>U$D ${gas.toLocaleString('es-AR')}</strong></span>
+          <span>= Neto: <strong class="${netoTotal>=0?'usd':'neg'}">U$D ${Math.round(netoTotal).toLocaleString('es-AR')}</strong></span>
+        </div>`:''}
+      </div>`;
+    });
+  });
+
+  const notas=cd.notas||'';
+
+  let html=`<div class="sr"><div class="stitle" style="margin:0">Carga mensual — ${MES[S.m]} ${S.y}</div>${selMes()}</div>`;
+  
+  if(!gs.length){
+    html+='<div style="text-align:center;padding:24px;color:var(--text2);font-size:12px">No hay UFs activas este mes.</div>';
+    return html;
+  }
+
+  html+=`<div class="card" style="margin-bottom:12px;background:var(--bg2)">
+    <div style="font-size:12px;font-weight:600;margin-bottom:8px">Resumen del mes</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
+      <div class="rc"><div class="rl">Urban View (15%)</div><div class="rv usd">U$D ${Math.round(totalUV).toLocaleString('es-AR')}</div></div>
+      <div class="rc" style="border-left-color:var(--blue)"><div class="rl">Alejandro</div><div class="rv" style="color:var(--blue)">U$D ${Math.round(totalAl).toLocaleString('es-AR')}</div></div>
+      <div class="rc" style="border-left-color:var(--purple)"><div class="rl">Conrado</div><div class="rv" style="color:var(--purple)">U$D ${Math.round(totalCo).toLocaleString('es-AR')}</div></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <div class="tbox"><div class="tbl">Neto total</div><div class="tbv ${totalNeto>=0?'usd':'neg'}">U$D ${Math.round(totalNeto).toLocaleString('es-AR')}</div></div>
+      <div class="tbox"><div class="tbl">UV + Al + Co</div><div class="tbv">U$D ${Math.round(totalUV+totalAl+totalCo).toLocaleString('es-AR')}</div></div>
+    </div>
+    <div class="fg"><div class="fl">Notas del mes</div>
+      <input id="notas_mes" value="${notas}" placeholder="Observaciones generales..." oninput="setCargaNotas(this.value)" style="font-size:12px">
+    </div>
+  </div>
+  <div style="font-size:13px;font-weight:600;margin-bottom:10px">Detalle por UF</div>
+  ${ufRows}
+  <div style="display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:0.5px solid var(--border)">
+    <button class="btn-primary" onclick="exportarPDF()" style="display:flex;align-items:center;gap:6px"><i class="ti ti-file-text"></i> Exportar PDF</button>
+    <button class="ab" onclick="exportarExcel()" style="display:flex;align-items:center;gap:6px"><i class="ti ti-table"></i> Exportar Excel</button>
+  </div>`;
+  return html;
+}
+
+function rBase(){
+  let h=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px"><div class="stitle" style="margin:0">Base de datos (${db.length} UFs)</div><button class="ab" onclick="openM(null)"><i class="ti ti-plus"></i> Nueva UF</button></div><div class="ox"><table><thead><tr><th>UF</th><th>Titular</th><th>Teléfono</th><th>Renta</th><th>Desde</th><th>Cochera</th><th>Tipo</th><th>CBU / Alias</th><th>%</th><th></th></tr></thead><tbody>`;
+  db.forEach((u,i)=>{
+    h+=`<tr>
+      <td style="font-weight:600">${u.uf}</td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px">${u.titular}</td>
+      <td style="font-size:11px">${u.telefono||'—'}</td>
+      <td class="${u.moneda==='USD'?'usd':'ars'}" style="font-weight:600;white-space:nowrap">${u.moneda==='USD'?'U$D':'$'}${u.monto_uf.toLocaleString('es-AR')}</td>
+      <td style="font-size:11px">${u.inicio_pago||'<span style="background:#FAEEDA;color:#854F0B;font-size:10px;padding:2px 6px;border-radius:6px;font-weight:500">Sin fecha</span>'}</td>
+      <td style="font-size:11px">${u.tiene_cochera&&u.monto_cochera?'U$D '+u.monto_cochera:'—'}</td>
+      <td>${tipTag(u.tipo_propiedad)}</td>
+      <td style="font-size:11px">${u.cbu_alias?`<span style="background:var(--bg2);border:0.5px solid var(--border);border-radius:6px;padding:2px 7px;font-size:10px">${u.cbu_alias}</span>`:'<span style="color:var(--text3)">—</span>'}</td><td style="font-size:11px;color:var(--text2);white-space:nowrap">UV${u.pct_uv}·Al${u.pct_alejandro}·Co${u.pct_conrado}</td>
+      <td style="white-space:nowrap">
+        <button class="mb" onclick="openM(${i})" style="margin-right:4px"><i class="ti ti-edit"></i></button>
+        <button class="btn-danger" onclick="delUF(${i})"><i class="ti ti-trash"></i></button>
+      </td>
+    </tr>`;
+  });
+  h+='</tbody></table></div>';
+  if(S.modal) h+=rModal();
+  return h;
+}
+
+function rModal(){
+  const u=S.ei!==null?db[S.ei]:{};
+  return `<div class="mo-overlay" onclick="if(event.target===this)closeM()"><div class="mo">
+  <div class="mt">${S.ei!==null?`Editar UF ${u.uf}`:'Nueva UF'}<button class="xb" onclick="closeM()">×</button></div>
+  <div class="fr"><div class="fg"><div class="fl">UF</div><input id="mu" value="${u.uf||''}"></div><div class="fg"><div class="fl">Titular</div><input id="mt" value="${u.titular||''}"></div></div>
+  <div class="fr"><div class="fg"><div class="fl">Teléfono</div><input id="mtel" value="${u.telefono||''}"></div><div class="fg"><div class="fl">Tipo</div><select id="mti"><option ${u.tipo_propiedad==='compartido'?'selected':''}>compartido</option><option ${u.tipo_propiedad==='externo'?'selected':''}>externo</option><option ${u.tipo_propiedad==='conrado'?'selected':''}>conrado</option><option ${u.tipo_propiedad==='alejandro'?'selected':''}>alejandro</option></select></div></div>
+  <div class="fr fr3"><div class="fg"><div class="fl">Monto renta</div><input type="number" id="mm" value="${u.monto_uf||''}"></div><div class="fg"><div class="fl">Moneda</div><select id="mmo"><option ${u.moneda==='USD'?'selected':''}>USD</option><option ${u.moneda==='ARS'?'selected':''}>ARS</option></select></div><div class="fg"><div class="fl">Inicio pago</div><input type="date" id="mi" value="${u.inicio_pago||''}"></div></div>
+  <div class="fr"><div class="fg"><div class="fl">Forma de pago</div><select id="mf">
+  <option value="efectivo_retira" ${u.forma_pago_renta==='efectivo_retira'?'selected':''}>Efectivo (retira)</option>
+  <option value="transferencia_monotributo_autonomo" ${u.forma_pago_renta==='transferencia_monotributo_autonomo'?'selected':''}>Transferencia monotributo/autónomo</option>
+  <option value="transferencia_responsable_inscripto" ${u.forma_pago_renta==='transferencia_responsable_inscripto'?'selected':''}>Transferencia responsable inscripto</option>
+  <option value="no_aplica" ${u.forma_pago_renta==='no_aplica'?'selected':''}>No aplica</option>
+</select></div><div class="fg"><div class="fl">CBU / Alias</div><input id="mc" value="${u.cbu_alias||''}"></div></div>
+  <div class="fr fr3"><div class="fg"><div class="fl">% Urban View</div><input type="number" id="muv" value="${u.pct_uv??15}"></div><div class="fg"><div class="fl">% Alejandro</div><input type="number" id="mal" value="${u.pct_alejandro??40}"></div><div class="fg"><div class="fl">% Conrado</div><input type="number" id="mco" value="${u.pct_conrado??60}"></div></div>
+  <div class="fr"><div class="fg"><div class="fl">¿Tiene cochera?</div><select id="mca"><option value="1" ${u.tiene_cochera?'selected':''}>Sí</option><option value="0" ${!u.tiene_cochera?'selected':''}>No</option></select></div><div class="fg"><div class="fl">Monto cochera (USD)</div><input type="number" id="mmc" value="${u.monto_cochera||''}"></div></div>
+  <div class="fr"><div class="fg"><div class="fl">Inicio cochera</div><input type="date" id="mic" value="${u.inicio_pago_cochera||''}"></div><div class="fg"><div class="fl">IVA 21% en renta USD</div><select id="miv"><option value="0" ${!u.iva_renta_usd?'selected':''}>No</option><option value="1" ${u.iva_renta_usd?'selected':''}>Sí</option></select></div></div>
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+    <button class="mb" onclick="closeM()">Cancelar</button>
+    <button class="btn-primary" onclick="saveUF()"><i class="ti ti-device-floppy"></i> Guardar</button>
+  </div>
+  </div></div>`;
+}
+
+function go(id){
+  S.sc=id;
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  const map={dashboard:0,pagos:1,marcar:2,carga:3,base:4};
+  document.querySelectorAll('.nb')[map[id]].classList.add('active');
+  render();
+}
+
+function render(){
+  const c=document.getElementById('ct');
+  if(S.sc==='dashboard') c.innerHTML=rDashboard();
+  else if(S.sc==='pagos') c.innerHTML=rPagos();
+  else if(S.sc==='marcar') c.innerHTML=rMarcar();
+  else if(S.sc==='carga') c.innerHTML=rCarga();
+  else c.innerHTML=rBase();
+}
+
+function saveCar(){
+  const ck=mk(S.m,S.y);
+  car[ck]={
+    ingresos:document.getElementById('ii')?.value||0,
+    gastos:document.getElementById('gi')?.value||0,
+    notas:document.getElementById('ni')?.value||''
+  };
+  save();
+}
+
+function openM(i){S.modal=true;S.ei=i;render();}
+function closeM(){S.modal=false;S.ei=null;render();}
+
+function saveUF(){
+  const n={
+    uf:document.getElementById('mu').value,
+    titular:document.getElementById('mt').value,
+    telefono:document.getElementById('mtel').value,
+    tipo_propiedad:document.getElementById('mti').value,
+    monto_uf:parseFloat(document.getElementById('mm').value)||0,
+    moneda:document.getElementById('mmo').value,
+    inicio_pago:document.getElementById('mi').value,
+    forma_pago_renta:document.getElementById('mf').value,
+    cbu_alias:document.getElementById('mc').value,
+    pct_uv:parseFloat(document.getElementById('muv').value)||15,
+    pct_alejandro:parseFloat(document.getElementById('mal').value)||40,
+    pct_conrado:parseFloat(document.getElementById('mco').value)||60,
+    tiene_cochera:document.getElementById('mca').value==='1',
+    monto_cochera:parseFloat(document.getElementById('mmc').value)||0,
+    moneda_cochera:'USD',
+    inicio_pago_cochera:document.getElementById('mic').value,
+    iva_renta_usd:document.getElementById('miv').value==='1',
+    paga_renta:true,
+    titular_cochera:document.getElementById('mt').value
+  };
+  if(S.ei!==null) db[S.ei]=n; else db.push(n);
+  save();closeM();
+}
+
+function delUF(i){
+  if(confirm(`¿Eliminar UF ${db[i].uf} — ${db[i].titular}?`)){
+    db.splice(i,1);save();render();
+  }
+}
+
+
+// ─── EXPORT ───────────────────────────────────────────────────────
+function exportarPDF(){
+  const gs=grupos(S.m,S.y);
+  const ck=mk(S.m,S.y),cd=car[ck]||{ufs:{}};
+  let totalIng=0,totalGas=0,totalNeto=0,totalUV=0,totalAl=0,totalCo=0;
+  gs.forEach(g=>g.ufs.forEach(({u})=>{
+    const d=(cd.ufs||{})[u.uf]||{};
+    const i2=parseFloat(d.ingreso||0);
+    const iCoch=parseFloat(d.ingreso_cochera||0);
+    const g2=parseFloat(d.gastos||0);
+    const alq=(u.tipo_propiedad==='externo'||u.tipo_propiedad==='conrado')?u.monto_uf:0;
+    const ingTotal=i2+iCoch;
+    const neto=ingTotal-alq-g2,uv=neto>0?neto*u.pct_uv/100:0,n2=neto-uv;
+    totalIng+=ingTotal;totalGas+=g2;totalNeto+=neto;
+    if(ingTotal>0){totalUV+=uv;totalAl+=n2*u.pct_alejandro/100;totalCo+=n2*u.pct_conrado/100;}
+  }));
+  const notas=(cd.notas||'');
+  const fmtPago=(f)=>f==='efectivo_retira'?'Efectivo (retira)':f==='transferencia_monotributo_autonomo'?'Transf. monotributo':f==='transferencia_responsable_inscripto'?'Transf. resp. inscripto':f==='no_aplica'?'No aplica':f||'—';
+  const fmtTipo=(t)=>t==='compartido'?'Compartido':t==='externo'?'Externo':t==='conrado'?'Conrado':t==='alejandro'?'Alejandro':t||'—';
+  let rows='';
+  let totalRenta=0;
+  gs.forEach(g=>{
+    const st=pst(g.titular,S.m,S.y);
+    // Build incluye string
+    let incluyeParts=[];
+    g.ufs.forEach(x=>{
+      let part='UF '+x.u.uf;
+      if(x.u.tiene_cochera&&x.u.monto_cochera&&x.u.inicio_pago_cochera){
+        const mesActual=S.y+'-'+String(S.m+1).padStart(2,'0');
+        if(mesActual>=x.u.inicio_pago_cochera.substring(0,7)) part+=' + Cochera';
+      }
+      incluyeParts.push(part);
+    });
+    const incluyeStr=incluyeParts.join(' · ');
+    const ufList=g.ufs.map(x=>`UF ${x.u.uf}`).join(', ');
+    rows+=`<tr>
+      <td><strong>${g.titular}</strong>${g.tel?'<br><span style="font-size:10px;color:#666">'+g.tel+'</span>':''}</td>
+      <td style="font-size:11px">${incluyeStr}</td>
+      <td style="text-align:center;font-size:11px">${fmtTipo(g.tipo)}</td>
+      <td style="text-align:right;color:#0F6E56;font-weight:600">${fmt(g.tUSD,'USD')}</td>
+      <td style="text-align:center;font-size:11px">${fmtPago(g.forma)}</td>
+      <td style="text-align:center;font-size:11px">${g.cbu||'—'}</td>
+      <td style="text-align:center"><span style="padding:2px 8px;border-radius:6px;font-size:11px;background:${st==='pagado'?'#EAF3DE':'#FAEEDA'};color:${st==='pagado'?'#3B6D11':'#854F0B'}">${st==='pagado'?'🟢 Pagado':'🟡 Pendiente'}</span></td>
+    </tr>`;
+    totalRenta+=g.tUSD;
+  });
+  const pUV=gs.length?gs[0].pUV:15,pAl=gs.length?gs[0].pAl:40,pCo=gs.length?gs[0].pCo:60;
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Urban View · ${MES[S.m]} ${S.y}</title>
+  <style>
+    body{font-family:-apple-system,sans-serif;padding:32px;color:#1a1a1a;max-width:960px;margin:0 auto}
+    h1{font-size:22px;font-weight:700;margin-bottom:4px}
+    .sub{color:#666;font-size:13px;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;margin-bottom:20px}
+    th{background:#f0f0ee;padding:8px 10px;font-size:11px;text-align:left;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #ddd}
+    td{padding:8px 10px;border-bottom:0.5px solid #eee;font-size:12px}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+    .box{background:#f7f7f5;padding:10px 14px;border-radius:8px}
+    .box-l{font-size:10px;color:#666;margin-bottom:2px;text-transform:uppercase;letter-spacing:.4px}
+    .box-v{font-size:16px;font-weight:700}
+    .rc{background:#f7f7f5;padding:10px 14px;border-radius:8px;border-left:3px solid #1D9E75}
+    .footer{margin-top:30px;font-size:10px;color:#999;border-top:0.5px solid #eee;padding-top:12px}
+    .section{font-size:13px;font-weight:700;margin:20px 0 10px;border-bottom:1px solid #eee;padding-bottom:4px}
+    @media print{body{padding:16px}}
+  </style>
+  </head><body>
+  <h1>Urban<span style="color:#1D9E75">View</span> · Movimientos de ${MES[S.m]} ${S.y}</h1>
+  <div class="sub">Generado el ${new Date().toLocaleDateString('es-AR')} · Rentas del 1 al 10 de cada mes</div>
+
+  <div class="section">Rentas a pagar</div>
+  <div class="grid">
+    <div class="box"><div class="box-l">Total renta a pagar</div><div class="box-v" style="color:#0F6E56">${fmt(totalRenta,'USD')}</div></div>
+    <div class="box"><div class="box-l">Ingresos cobrados</div><div class="box-v" style="color:#0F6E56">${fmt(totalIng,'USD')}</div></div>
+    <div class="box"><div class="box-l">Gastos operativos</div><div class="box-v" style="color:#E24B4A">${fmt(totalGas,'USD')}</div></div>
+    <div class="rc"><div class="box-l">Resultado neto</div><div class="box-v" style="color:${totalNeto>=0?'#0F6E56':'#E24B4A'}">${fmt(totalNeto,'USD')}</div></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Titular</th><th>Incluye</th><th>Participación</th><th style="text-align:right">Total</th><th>Forma de pago</th><th>CBU / Alias</th><th style="text-align:center">Estado</th></tr></thead>
+    <tbody>${rows}</tbody>
+    <tfoot><tr style="background:#f0f0ee"><td colspan="3" style="font-weight:700;padding:8px 10px">TOTAL</td><td style="text-align:right;font-weight:700;color:#0F6E56;padding:8px 10px">${fmt(totalRenta,'USD')}</td><td colspan="2"></td></tr></tfoot>
+  </table>
+
+  <div class="section">Liquidación</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+    <div class="rc"><div class="box-l">Ganancia Urban View</div><div class="box-v" style="color:${totalUV>=0?'#0F6E56':'#E24B4A'}">${fmt(totalUV,'USD')}</div></div>
+    <div class="rc" style="border-left-color:#185FA5"><div class="box-l">Resultado Alejandro</div><div class="box-v" style="color:${totalAl>=0?'#0F6E56':'#E24B4A'}">${fmt(totalAl,'USD')}</div></div>
+    <div class="rc" style="border-left-color:#534AB7"><div class="box-l">Resultado Conrado</div><div class="box-v" style="color:${totalCo>=0?'#0F6E56':'#E24B4A'}">${fmt(totalCo,'USD')}</div></div>
+  </div>
+  ${notas?`<p style="font-size:12px;color:#666;margin-top:8px"><b>Notas:</b> ${notas}</p>`:''}
+  <div class="footer">Urban View · Gestión de Rentas · ${MES[S.m]} ${S.y}</div>
+  <script>window.onload=()=>window.print()<\/script>
+  </body></html>`);
+  w.document.close();
+}
+
+function exportarExcel(){
+  const gs=grupos(S.m,S.y);
+  const ck=mk(S.m,S.y),cd=car[ck]||{ufs:{}};
+  const fmtPago=(f)=>f==='efectivo_retira'?'Efectivo (retira)':f==='transferencia_monotributo_autonomo'?'Transf. monotributo':f==='transferencia_responsable_inscripto'?'Transf. resp. inscripto':f==='no_aplica'?'No aplica':f||'—';
+  let totalIng=0,totalGas=0,totalNeto=0,totalUV=0,totalAl=0,totalCo=0;
+
+  let csv='Titular,UFs,Tipo,Renta a pagar,Ingreso cobrado,Gastos,Neto,UV,Alejandro,Conrado,Forma de pago,Estado\n';
+  gs.forEach(g=>{
+    const st=pst(g.titular,S.m,S.y);
+    const ufList=g.ufs.map(x=>`UF ${x.u.uf}`).join(' | ');
+    let gIng=0,gGas=0,gNeto=0,gUV=0,gAl=0,gCo=0;
+    g.ufs.forEach(({u})=>{
+      const d=(cd.ufs||{})[u.uf]||{};
+      const i2=parseFloat(d.ingreso||0),g2=parseFloat(d.gastos||0);
+      const alq=(u.tipo_propiedad==='externo'||u.tipo_propiedad==='conrado')?u.monto_uf:0;
+      const neto=i2-alq-g2,uv=neto>0?neto*u.pct_uv/100:0,n2=neto-uv;
+      gIng+=i2;gGas+=g2;gNeto+=neto;
+      if(i2>0){gUV+=uv;gAl+=n2*u.pct_alejandro/100;gCo+=n2*u.pct_conrado/100;}
+    });
+    totalIng+=gIng;totalGas+=gGas;totalNeto+=gNeto;totalUV+=gUV;totalAl+=gAl;totalCo+=gCo;
+    csv+=`"${g.titular}","${ufList}","${g.tipo}",${Math.round(g.tUSD)},${Math.round(gIng)},${Math.round(gGas)},${Math.round(gNeto)},${Math.round(gUV)},${Math.round(gAl)},${Math.round(gCo)},"${fmtPago(g.forma)}","${st==='pagado'?'Pagado':'Pendiente'}"\n`;
+  });
+  csv+='\n';
+  csv+=`"TOTALES",,,,${Math.round(totalIng)},${Math.round(totalGas)},${Math.round(totalNeto)},${Math.round(totalUV)},${Math.round(totalAl)},${Math.round(totalCo)},,\n`;
+  if(cd.notas) csv+=`\n"Notas","${cd.notas}"\n`;
+  const BOM='\uFEFF';
+  const blob=new Blob([BOM+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`UrbanView_${MES[S.m]}_${S.y}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+// ──────────────────────────────────────────────────────────────────
+// DEBUG: verificar datos al cargar
+console.log('DB_FRESH count:', DB_FRESH.length);
+console.log('db count:', db.length);
+const may_activas = db.filter(u=>u.paga_renta&&u.monto_uf&&u.inicio_pago);
+console.log('UFs con fecha en mayo:', may_activas.length);
+may_activas.forEach(u=>console.log('  UF', u.uf, u.inicio_pago, u.monto_uf));
+let _cargaTimer=null;
+function setCargaUF(uid, campo, valor){
+  const ck=mk(S.m,S.y);
+  if(!car[ck]) car[ck]={ufs:{},notas:''};
+  if(!car[ck].ufs) car[ck].ufs={};
+  if(!car[ck].ufs[uid]) car[ck].ufs[uid]={};
+  car[ck].ufs[uid][campo]=valor;
+  localStorage.setItem('uv_carga',JSON.stringify(car));
+  clearTimeout(_cargaTimer);
+  _cargaTimer=setTimeout(()=>{
+    // Guardar cada UF como clave simple igual que pagos
+    const ck2=mk(S.m,S.y);
+    const cd=car[ck2]||{ufs:{}};
+    const gs2=grupos(S.m,S.y);
+    gs2.forEach(g=>g.ufs.forEach(({u})=>{
+      const d=(cd.ufs||{})[u.uf]||{};
+      const ing=parseFloat(d.ingreso||0);
+      if(ing===0) return;
+      const gas=parseFloat(d.gastos||0);
+      const alq=(u.tipo_propiedad==='externo'||u.tipo_propiedad==='conrado')?u.monto_uf:0;
+      const neto=ing-alq-gas;
+      const uv=neto>0?Math.round(neto*u.pct_uv/100):0;
+      const neto2=neto-uv;
+      const al=Math.round(neto2*u.pct_alejandro/100);
+      const co=Math.round(neto2*u.pct_conrado/100);
+      const clave=ck2+'-UF'+u.uf;
+      const valor='Ingreso: '+ing+' | Gastos: '+gas+' | Neto: '+Math.round(neto)+' | UV: '+uv+' | Alejandro: '+al+' | Conrado: '+co;
+      saveToSheets('CargaMensual', clave, valor);
+    }));
+  },1500);
+}
+
+function setCargaNotas(v){
+  const ck=mk(S.m,S.y);
+  if(!car[ck]) car[ck]={ufs:{},notas:''};
+  car[ck].notas=v;
+  localStorage.setItem('uv_carga',JSON.stringify(car));
+  saveToSheets('CargaMensual', ck+'-notas', v);
+}
+
+render();
+syncFromSheets();
+</script>
+</body>
+</html>
